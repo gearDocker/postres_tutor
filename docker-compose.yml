@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  # Сервис базы данных PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: postgres_tutor_db
+    environment:
+      POSTGRES_USER: tutor
+      POSTGRES_PASSWORD: tutor_password
+      POSTGRES_DB: tutor_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: always
+
+  # Сервис pgAdmin (веб-интерфейс для SQL)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: postgres_tutor_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@student.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+    restart: always
+
+# Блок определения томов (нужно объявить их здесь)
+volumes:
+  pg_data: # Имя тома для базы данных
+  pgadmin_data: # Имя тома для настроек админки
