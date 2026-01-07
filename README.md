@@ -43,3 +43,89 @@ select
 	s.phone as "Телефон компании грузоотправителя"
 from shippers s
 ```
+
+#### Lesson 2
+
+#### Lesson 3
+
+Оператор фильтрации `where`:
+
+```sql
+select
+	*
+from products p
+where p.category_id = 7
+```
+
+... оператор `where` не поддерживает работу с алиасами; такой пример вызовет ошибку:
+
+```sql
+select
+c.city as t
+from customers c
+where t ilike 'c%'
+```
+
+... здесь `t` - это алиас для `c.city`; это происходит потому, что оператор `where` - **срабатывает раньше**, чем присваиваются алиасы.
+
+Оператор `in` работает аналогично методу `includes` в JavaScript:
+
+```sql
+select * from products p where p.supplier_id in (12, 24)
+```
+
+... чтобы не писать:
+
+```sql
+select * from products p where p.supplier_id = 12 or p.supplier_id = 24
+```
+
+... что идентично по результату.
+
+Оператор `not` - инверсия; например:
+
+```sql
+select * from products p where p.supplier_id not in (12, 24, 14, 1, 6)
+```
+
+... будет сделана выборка всех значений из атрибута `supplier_id`, кроме указанных - `(12, 24, 14, 1, 6)`; аналогично:
+
+```sql
+select * from products p where not p.supplier_id = 8
+```
+
+Оператор `between ... and` - позволяет сделать выборку диапазона значений:
+
+```sql
+select * from products p where p.unit_price between 40 and 50
+```
+
+... причем у оператора `between` обе границы - включительно; аналогично оператор `between` работает с датами:
+
+```sql
+select * from orders o where o.order_date between '1996-08-01' and '1996-09-01'
+```
+
+Проверка на `null`:
+
+```sql
+select * from customers c where c.region is null
+```
+
+```sql
+select * from customers c where c.region is not null
+```
+
+... в комментариях не нуждается.
+
+Оператор `like` и `ilike` - для поиска строки в подстроке; `like` регистрозависимый:
+
+```sql
+select * from customers c where c.company_name like 'A%'
+```
+
+... здесь `%` - тоже самое, что `*` в JavaScript - любой кол-во символов; регистронезависимый вариант:
+
+```sql
+select * from customers c where c.company_name ilike 'a%'
+```
